@@ -4,7 +4,7 @@ const io = require('socket.io-client')
 const repl = require('repl')
 const chalk = require('chalk')
 
-const host = 'http://localhost:3003'
+const host = 'http://a150f5603edb.ngrok.io'
 const socket = io.connect(host)
 
 require('dotenv').config();
@@ -25,14 +25,17 @@ socket.on('connect', () => {
   socket.emit('username', userObj)
 })
 
+socket.on('joining', (payload) => {
+console.log(`${payload} has joined the chat say hello!`);
+})
+
 socket.on('message', (data) => {
   const { cmd, username } = data
   console.log(chalk.green(username + ': ' + cmd.split('/n')[0]));
 })
-
-// socket.on('time', (payload) =>{
-//   console.log('This is where time will go')
-// });
+socket.on('leaving', (payload) => {
+  console.log(`${payload.username} has left the chat!`)
+})
 
 
 repl.start({
